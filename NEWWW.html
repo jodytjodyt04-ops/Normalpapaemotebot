@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NORMAL_PAPA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #111111;
+            --bg-card: #1a1a1a;
+            --bg-input: #222222;
+            --bg-hover: #2a2a2a;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #888888;
+            --border-color: #333333;
+            --shadow-color: rgba(255,255,255,0.05);
+            --toggle-bg: #333333;
+            --toggle-active: #ffffff;
+            --button-bg: #ffffff;
+            --button-text: #000000;
+            --button-hover: #dddddd;
+            --emote-border: #2a2a2a;
+            --social-btn-bg: rgba(255,255,255,0.08);
+            --social-btn-hover: rgba(255,255,255,0.15);
+            --gradient-start: #667eea;
+            --gradient-end: #764ba2;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f0f0f0;
+            --bg-card: #e8e8e8;
+            --bg-input: #dddddd;
+            --bg-hover: #d0d0d0;
+            --text-primary: #000000;
+            --text-secondary: #222222;
+            --text-muted: #555555;
+            --border-color: #cccccc;
+            --shadow-color: rgba(0,0,0,0.08);
+            --toggle-bg: #cccccc;
+            --toggle-active: #000000;
+            --button-bg: #000000;
+            --button-text: #ffffff;
+            --button-hover: #333333;
+            --emote-border: #cccccc;
+            --social-btn-bg: rgba(0,0,0,0.06);
+            --social-btn-hover: rgba(0,0,0,0.12);
+            --gradient-start: #667eea;
+            --gradient-end: #764ba2;
+            --success-color: #059669;
+            --error-color: #dc2626;
+        }
+
+        * { user-select: none !important; -webkit-user-select: none !important; -moz-user-select: none !important; -ms-user-select: none !important; -webkit-touch-callout: none !important; }
+        input, textarea, select { user-select: text !important; -webkit-user-select: text !important; -moz-user-select: text !important; -ms-user-select: text !important; }
+        img, a { -webkit-user-drag: none !important; user-drag: none !important; }
+
+        * { margin:0; padding:0; box-sizing:border-box; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        ::-webkit-scrollbar { width:8px; }
+        ::-webkit-scrollbar-track { background:var(--scrollbar-track); }
+        ::-webkit-scrollbar-thumb { background:var(--scrollbar-thumb); border-radius:4px; }
+
+        .container {
+            max-width: 920px;
+            margin: 0 auto;
+            background-color: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 30px 35px 40px;
+            box-shadow: 0 20px 60px var(--shadow-color);
+            border: 1px solid var(--border-color);
+        }
+
+        /* ===== MAIN CONTENT (Always Visible) ===== */
+        #main-content { display: block; }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 99999;
+            animation: slideUp 0.4s ease;
+            max-width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        .toast-info { background: var(--gradient-start); color: #fff; }
+        .toast-success { background: var(--success-color); color: #fff; }
+        .toast-error { background: var(--error-color); color: #fff; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(30px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 16px;
+        }
+        header h1 { font-size: 26px; font-weight: 700; letter-spacing: 1px; color: var(--text-primary); }
+        .header-controls { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+
+        .theme-toggle-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .theme-toggle-wrapper .toggle-label {
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 11px;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+        .switch input { opacity:0; width:0; height:0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top:0; left:0; right:0; bottom:0;
+            background-color: var(--toggle-bg);
+            border-radius: 26px;
+            transition: 0.3s;
+            border: 1px solid var(--border-color);
+        }
+        .slider::before {
+            content: "";
+            position: absolute;
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--bg-primary);
+            border-radius: 50%;
+            transition: 0.3s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        .switch input:checked+.slider { background-color: var(--toggle-active); }
+        .switch input:checked+.slider::before { transform: translateX(22px); }
+        .switch .slider .icon-wrap {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 12px;
+            pointer-events: none;
+            z-index:1;
+        }
+        .switch .slider .icon-wrap.left { left:6px; color:#ffffff; opacity:0.5; }
+        .switch .slider .icon-wrap.right { right:6px; color:#000000; opacity:0.3; }
+        .switch input:checked+.slider .icon-wrap.left { opacity:0.3; }
+        .switch input:checked+.slider .icon-wrap.right { opacity:0.6; }
+
+        .social-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 6px;
+        }
+        .social-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            background-color: var(--social-btn-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            transition: 0.25s;
+        }
+        .social-button:hover {
+            background-color: var(--social-btn-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px var(--shadow-color);
+        }
+        .social-button.instagram i { color: #E4405F; }
+        .social-button.telegram i { color: #26A5E4; }
+        .social-button.whatsapp i { color: #25D366; }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .input-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .input-group label i { width:18px; color:var(--text-muted); }
+        .input-group select,
+        .input-group input {
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 15px;
+            outline: none;
+            transition: 0.25s;
+            width: 100%;
+            appearance: auto;
+        }
+        .input-group select:focus,
+        .input-group input:focus {
+            border-color: var(--text-primary);
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.06);
+        }
+        .input-group select option { background-color: var(--bg-secondary); color: var(--text-primary); }
+        .uid-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 14px;
+        }
+
+        .emote-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 18px;
+        }
+        .emote-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 18px;
+            background-color: var(--bg-card);
+            border-radius: 14px;
+            border: 1px solid var(--emote-border);
+            transition: 0.25s;
+        }
+        .emote-item:hover {
+            border-color: var(--text-muted);
+            box-shadow: 0 4px 16px var(--shadow-color);
+        }
+        .emote-item img {
+            width: 52px;
+            height: 52px;
+            object-fit: contain;
+            border-radius: 10px;
+            background-color: var(--bg-input);
+            flex-shrink: 0;
+            border: 1px solid var(--border-color);
+            padding: 4px;
+        }
+        .emote-details { flex: 1; min-width: 0; }
+        .emote-details .emote-name {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--text-primary);
+        }
+        .send-button {
+            padding: 10px 22px;
+            border-radius: 30px;
+            border: none;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.25s;
+            flex-shrink: 0;
+            border: 1px solid var(--border-color);
+        }
+        .send-button:hover {
+            background-color: var(--button-hover);
+            transform: scale(1.03);
+            box-shadow: 0 4px 14px var(--shadow-color);
+        }
+        .send-button:active { transform: scale(0.96); }
+
+        @media (max-width: 700px) {
+            .container { padding:18px 16px 28px; }
+            header { flex-direction:column; align-items:stretch; gap:12px; }
+            header h1 { font-size:21px; text-align:center; }
+            .header-controls { justify-content:center; }
+            .social-links { justify-content:center; }
+            .uid-grid { grid-template-columns:1fr 1fr; }
+            .emote-item { flex-wrap:wrap; padding:12px 14px; }
+            .emote-item img { width:44px; height:44px; }
+            .send-button { padding:8px 16px; font-size:13px; width:100%; margin-top:6px; }
+            .theme-toggle-wrapper .toggle-label { font-size:10px; }
+            .toast { font-size:12px; padding:10px 18px; }
+        }
+        @media (max-width: 420px) {
+            .container { padding:12px 10px 20px; border-radius:14px; }
+            header h1 { font-size:18px; }
+            .social-button { font-size:11px; padding:6px 12px; }
+            .uid-grid { grid-template-columns:1fr; }
+        }
+
+        #anti-inspection-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 999999;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+        #anti-inspection-overlay.show { display: flex; }
+        #anti-inspection-overlay .msg {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            max-width: 500px;
+        }
+        #anti-inspection-overlay .msg i {
+            font-size: 60px;
+            display: block;
+            margin-bottom: 20px;
+            color: #ef4444;
+        }
+        #anti-inspection-overlay .msg span { color: #f59e0b; }
+    </style>
+</head>
+<body>
+
+    <div id="anti-inspection-overlay">
+        <div class="msg">
+            <i class="fas fa-shield-alt"></i>
+            Developer Tools Detected!<br>
+            <span>Please close DevTools to continue.</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="main-content">
+            <header>
+                <h1>WELCOME TO NORMAL PAPA EMOTE BOT</h1>
+                <div class="header-controls">
+                    <div class="theme-toggle-wrapper">
+                        <span class="toggle-label">☀️</span>
+                        <label class="switch">
+                            <input type="checkbox" id="theme-toggle">
+                            <span class="slider">
+                                <span class="icon-wrap left">☀️</span>
+                                <span class="icon-wrap right">🌙</span>
+                            </span>
+                        </label>
+                        <span class="toggle-label">🌙</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="social-links" style="margin-bottom: 24px;">
+                <a href="https://www.instagram.com/ktgamerx/" target="_blank" class="social-button instagram">
+                    <i class="fab fa-instagram"></i> Follow Instagram
+                </a>
+                <a href="https://t.me/ktfamilys" target="_blank" class="social-button telegram">
+                    <i class="fab fa-telegram-plane"></i> Join Telegram
+                </a>
+                <a href="https://whatsapp.com/channel/0029Vb5LWmAJ3juuTEmNDw2g" target="_blank" class="social-button whatsapp">
+                    <i class="fab fa-whatsapp"></i> Join WhatsApp
+                </a>
+            </div>
+
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="server"><i class="fas fa-server"></i> Server:</label>
+                    <select id="server">
+                        <option value="india">India Server</option>
+                        <option value="bangladesh">Bangladesh Server</option>
+                        <option value="pakistan">Pakistan Server</option>
+                        <option value="indonesia">Indonesia Server</option>
+                        <option value="brazil">Brazil Server</option>
+                        <option value="taiwan">Taiwan Server</option>
+                        <option value="vietnam">Vietnam Server</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="team-code"><i class="fas fa-users"></i> Team Code:</label>
+                    <input type="text" id="team-code" placeholder="Enter team code">
+                </div>
+                <div class="uid-grid">
+                    <div class="input-group">
+                        <label for="uid1"><i class="fas fa-user"></i> UID 1:</label>
+                        <input type="text" class="uid-input" id="uid1" placeholder="Required">
+                    </div>
+                    <div class="input-group">
+                        <label for="uid2"><i class="fas fa-user"></i> UID 2:</label>
+                        <input type="text" class="uid-input" id="uid2" placeholder="Optional">
+                    </div>
+                    <div class="input-group">
+                        <label for="uid3"><i class="fas fa-user"></i> UID 3:</label>
+                        <input type="text" class="uid-input" id="uid3" placeholder="Optional">
+                    </div>
+                    <div class="input-group">
+                        <label for="uid4"><i class="fas fa-user"></i> UID 4:</label>
+                        <input type="text" class="uid-input" id="uid4" placeholder="Optional">
+                    </div>
+                    <div class="input-group">
+                        <label for="uid5"><i class="fas fa-user"></i> UID 5:</label>
+                        <input type="text" class="uid-input" id="uid5" placeholder="Optional">
+                    </div>
+                    <div class="input-group">
+                        <label for="uid6"><i class="fas fa-user"></i> UID 6:</label>
+                        <input type="text" class="uid-input" id="uid6" placeholder="Optional">
+                    </div>
+                </div>
+            </div>
+
+            <div class="emote-list" id="emote-list"></div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ============================================================
+            // ===== ANTI-INSPECTION =====
+            // ============================================================
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'F12' || 
+                    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) ||
+                    (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j')) ||
+                    (e.ctrlKey && (e.key === 'u' || e.key === 'U')) ||
+                    (e.ctrlKey && (e.key === 's' || e.key === 'S')) ||
+                    (e.ctrlKey && e.shiftKey && (e.key === 'c' || e.key === 'C')) ||
+                    (e.ctrlKey && (e.key === 'p' || e.key === 'P'))) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }, true);
+
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }, true);
+
+            document.addEventListener('dragstart', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }, true);
+
+            document.addEventListener('selectstart', function(e) {
+                if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'SELECT') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }, true);
+
+            // ============================================================
+            // ===== SOCIAL LINKS =====
+            // ============================================================
+            const socialLinks = {
+                telegram: 'https://t.me/ShadowGamerzOfficial',
+                whatsapp: 'https://whatsapp.com/channel/0029Vb5LWmAJ3juuTEmNDw2g',
+                instagram: 'https://www.instagram.com/ktgamerx/'
+            };
+
+            // ============================================================
+            // ===== TOAST =====
+            // ============================================================
+            function showToast(message, type) {
+                const existing = document.querySelector('.toast');
+                if (existing) existing.remove();
+                const toast = document.createElement('div');
+                toast.className = 'toast toast-' + (type || 'info');
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateX(-50%) translateY(30px)';
+                    setTimeout(() => toast.remove(), 400);
+                }, 4000);
+            }
+
+            // ============================================================
+            // ===== THEME =====
+            // ============================================================
+            const themeToggle = document.getElementById('theme-toggle');
+            const savedTheme = localStorage.getItem('ktgamerz_theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                themeToggle.checked = true;
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeToggle.checked = false;
+            }
+            themeToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    localStorage.setItem('ktgamerz_theme', 'light');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('ktgamerz_theme', 'dark');
+                }
+            });
+
+            // ============================================================
+            // ===== EMOTE DATA =====
+            // ============================================================
+            const emotes = [
+                { id: "909000075", name: "Cobra Max", img: "909000075.png" },
+                { id: "909000063", name: "Ak Max", img: "909000063.png" },
+                { id: "909035007", name: "Shotgun Max", img: "909035007.png" },
+                { id: "909000068", name: "Scar Max", img: "909000068.png" },
+                { id: "909000085", name: "XM8 Max", img: "909000085.png" },
+                { id: "909000081", name: "M10 Max", img: "909000081.png" },
+                { id: "909000090", name: "Famasa Max", img: "909000090.png" },
+                { id: "909000098", name: "UMP Max", img: "909000098.png" },
+                { id: "909040010", name: "New M40 Max", img: "909040010.png" },
+                { id: "909045001", name: "Parafal Max", img: "909045001.png" },
+                { id: "909042008", name: "WD Picker Max", img: "909042008.png" },
+                { id: "909049012", name: "Open Fire", img: "909049012.png" },
+                { id: "909042007", name: "Gloo Sculpture", img: "909042007.png" },
+                { id: "909000002", name: "LOL", img: "909000002.png" },
+                { id: "909000003", name: "Provoke", img: "909000003.png" },
+                { id: "909000010", name: "Flowers of Love", img: "909000010.png" },
+                { id: "909000014", name: "FFWC Throne", img: "909000014.png" },
+                { id: "909000032", name: "Selfie", img: "909000032.png" },
+                { id: "909000034", name: "Pirate's Flag", img: "909000034.png" },
+                { id: "909000036", name: "Top DJ", img: "909000036.png" },
+                { id: "909000038", name: "Power of Money", img: "909000038.png" },
+                { id: "909000039", name: "Eat My Dust", img: "909000039.png" },
+                { id: "909000041", name: "Kongfu", img: "909000041.png" },
+                { id: "909000045", name: "I Heart You", img: "909000045.png" },
+                { id: "909000046", name: "Tea Time", img: "909000046.png" },
+                { id: "909000052", name: "Doggie", img: "909000052.png" },
+                { id: "909000055", name: "I'm Rich!", img: "909000055.png" },
+                { id: "909000056", name: "Make It Rain", img: "909000056.png" },
+                { id: "909000057", name: "Dust Off", img: "909000057.png" },
+                { id: "909000058", name: "Captain Booyah", img: "909000058.png" },
+                { id: "909000060", name: "BOOYAH!", img: "909000060.png" },
+                { id: "909000061", name: "Bhangra", img: "909000061.png" },
+                { id: "909000062", name: "Piece of Cake", img: "909000062.png" },
+                { id: "909000064", name: "I'm Saitama!", img: "909000064.png" },
+                { id: "909000065", name: "The Victor", img: "909000065.png" },
+                { id: "909000066", name: "Sii!", img: "909000066.png" },
+                { id: "909000067", name: "Obliteration", img: "909000067.png" },
+                { id: "909000069", name: "Top Scorer", img: "909000069.png" },
+                { id: "909000070", name: "Triple Kicks", img: "909000070.png" },
+                { id: "909000071", name: "Cobra Dance", img: "909000071.png" },
+                { id: "909000072", name: "Predator Pulse", img: "909000072.png" },
+                { id: "909000073", name: "Ground Punch", img: "909000073.png" },
+                { id: "909000074", name: "The Biker", img: "909000074.png" },
+                { id: "909000076", name: "One-Finger Pushup", img: "909000076.png" },
+                { id: "909000077", name: "Stage Time", img: "909000077.png" },
+                { id: "909000078", name: "Booyah! Balloon", img: "909000078.png" },
+                { id: "909000079", name: "More Practice", img: "909000079.png" },
+                { id: "909000080", name: "FFWS 2021", img: "909000080.png" },
+                { id: "909000086", name: "Mythos Four", img: "909000086.png" },
+                { id: "909000087", name: "Champion Grab", img: "909000087.png" },
+                { id: "909000088", name: "Win and Chill", img: "909000088.png" },
+                { id: "909000089", name: "Hadouken", img: "909000089.png" },
+                { id: "909000091", name: "Big Smash", img: "909000091.png" },
+                { id: "909000093", name: "All In Control", img: "909000093.png" },
+                { id: "909000094", name: "Debugging", img: "909000094.png" },
+                { id: "909000095", name: "Waggor Wave", img: "909000095.png" },
+                { id: "909000096", name: "Crazy Guitar", img: "909000096.png" },
+                { id: "909000121", name: "Dribble King", img: "909000121.png" },
+                { id: "909000123", name: "Mind it!", img: "909000123.png" },
+                { id: "909000124", name: "Golden Combo", img: "909000124.png" },
+                { id: "909000125", name: "Sick Moves", img: "909000125.png" },
+                { id: "909000128", name: "Ruler's Flag", img: "909000128.png" },
+                { id: "909000129", name: "Money Throw", img: "909000129.png" },
+                { id: "909000130", name: "Endless Bullets", img: "909000130.png" },
+                { id: "909000133", name: "Fire Slam", img: "909000133.png" },
+                { id: "909000134", name: "Heartbroken", img: "909000134.png" },
+                { id: "909000135", name: "Rock Paper Scissors", img: "909000135.png" },
+                { id: "909000136", name: "Shattered Reality", img: "909000136.png" },
+                { id: "909000137", name: "Halo of Music", img: "909000137.png" },
+                { id: "909000138", name: "Burnt BBQ", img: "909000138.png" },
+                { id: "909000139", name: "Switching Steps", img: "909000139.png" },
+                { id: "909000140", name: "Creed Slay", img: "909000140.png" },
+                { id: "909000141", name: "Leap of Fail", img: "909000141.png" },
+                { id: "909000143", name: "Helicopter Shot", img: "909000143.png" },
+                { id: "909000144", name: "Kungfu Tigers", img: "909000144.png" },
+                { id: "909000145", name: "Possessed Warrior", img: "909000145.png" },
+                { id: "909033001", name: "Fireborn", img: "909033001.png" },
+                { id: "909033002", name: "Golden Feather", img: "909033002.png" },
+                { id: "909033004", name: "Drop Kick", img: "909033004.png" },
+                { id: "909033005", name: "Sit Down!", img: "909033005.png" },
+                { id: "909033006", name: "BOOYAH Sparks", img: "909033006.png" },
+                { id: "909033007", name: "The FFWS Dance", img: "909033007.png" },
+                { id: "909033008", name: "Easy Peasy", img: "909033008.png" },
+                { id: "909033009", name: "Winner Throw", img: "909033009.png" },
+                { id: "909033010", name: "Weight of Victory", img: "909033010.png" },
+                { id: "909034001", name: "Chronicle of Sword", img: "909034001.png" },
+                { id: "909034002", name: "The Collapse", img: "909034002.png" },
+                { id: "909034003", name: "Flaming Groove", img: "909034003.png" },
+                { id: "909034004", name: "Energetic", img: "909034004.png" },
+                { id: "909034005", name: "Ridicule", img: "909034005.png" },
+                { id: "909034006", name: "Tease Waggor", img: "909034006.png" },
+                { id: "909034007", name: "Great Conductor", img: "909034007.png" },
+                { id: "909034008", name: "Fake Death", img: "909034008.png" },
+                { id: "909034009", name: "Twerk", img: "909034009.png" },
+                { id: "909034010", name: "BR Heroic Emote", img: "909034010.png" },
+                { id: "909034011", name: "BR Master Emote", img: "909034011.png" },
+                { id: "909034012", name: "CS Heroic Emote", img: "909034012.png" },
+                { id: "909034013", name: "CS Master Emote", img: "909034013.png" },
+                { id: "909034014", name: "Yes, I do", img: "909034014.png" },
+                { id: "909035001", name: "Free Money!", img: "909035001.png" },
+                { id: "909035005", name: "Victorious Eagle", img: "909035005.png" },
+                { id: "909035006", name: "Flying Saucer", img: "909035006.png" },
+                { id: "909035008", name: "Bobble Dance", img: "909035008.png" },
+                { id: "909035009", name: "Weight Training", img: "909035009.png" },
+                { id: "909035010", name: "Beautiful Love", img: "909035010.png" },
+                { id: "909035011", name: "Groove Moves", img: "909035011.png" },
+                { id: "909035012", name: "Howler's Rage", img: "909035012.png" },
+                { id: "909035013", name: "Louder Please", img: "909035013.png" },
+                { id: "909035014", name: "Ninja Stand", img: "909035014.png" },
+                { id: "909035015", name: "Creator In Action", img: "909035015.png" },
+                { id: "909036001", name: "Ghost Float", img: "909036001.png" },
+                { id: "909036002", name: "Shiba Surf", img: "909036002.png" },
+                { id: "909036003", name: "Waiter Walk", img: "909036003.png" },
+                { id: "909036004", name: "Graffiti Cameraman", img: "909036004.png" },
+                { id: "909036005", name: "Agile Boxer", img: "909036005.png" },
+                { id: "909036006", name: "Sunbathing", img: "909036006.png" },
+                { id: "909036008", name: "Skateboard Swag", img: "909036008.png" },
+                { id: "909036009", name: "Phantom Tamer", img: "909036009.png" },
+                { id: "909036010", name: "The Signal", img: "909036010.png" },
+                { id: "909036011", name: "Eternal Descent", img: "909036011.png" },
+                { id: "909036012", name: "Swaggy Dance", img: "909036012.png" },
+                { id: "909036014", name: "Admire", img: "909036014.png" },
+                { id: "909037001", name: "Reindeer Float", img: "909037001.png" },
+                { id: "909037002", name: "Bamboo Dance", img: "909037002.png" },
+                { id: "909037003", name: "Dance of Constellation", img: "909037003.png" },
+                { id: "909037004", name: "Trophy Grab", img: "909037004.png" },
+                { id: "909037005", name: "Starry Hands", img: "909037005.png" },
+                { id: "909037006", name: "Yum", img: "909037006.png" },
+                { id: "909037007", name: "Happy Dancing", img: "909037007.png" },
+                { id: "909037008", name: "Juggle", img: "909037008.png" },
+                { id: "909037009", name: "Neon Sign", img: "909037009.png" },
+                { id: "909037010", name: "Beast Tease", img: "909037010.png" },
+                { id: "909037011", name: "Drachen Tear", img: "909037011.png" },
+                { id: "909037012", name: "Clap Dance", img: "909037012.png" },
+                { id: "909038001", name: "The Influencer", img: "909038001.png" },
+                { id: "909038003", name: "Techno Blast", img: "909038003.png" },
+                { id: "909038004", name: "Be My Valentine", img: "909038004.png" },
+                { id: "909038005", name: "Angry Walk", img: "909038005.png" },
+                { id: "909038006", name: "Make Some Noise", img: "909038006.png" },
+                { id: "909038008", name: "Croco Hooray", img: "909038008.png" },
+                { id: "909038009", name: "Scorpio Spin", img: "909038009.png" },
+                { id: "909038010", name: "Cinder Summon", img: "909038010.png" },
+                { id: "909038011", name: "Shall We Dance?", img: "909038011.png" },
+                { id: "909038012", name: "Achiever Flip", img: "909038012.png" },
+                { id: "909038013", name: "Spin Master", img: "909038013.png" },
+                { id: "909039001", name: "Festival Celebration", img: "909039001.png" },
+                { id: "909039002", name: "Artistic Dance", img: "909039002.png" },
+                { id: "909039003", name: "Forward Backward", img: "909039003.png" },
+                { id: "909039004", name: "Scorpion Friend", img: "909039004.png" },
+                { id: "909039005", name: "Aching Power", img: "909039005.png" },
+                { id: "909039006", name: "Earthly Force", img: "909039006.png" },
+                { id: "909039007", name: "Grenade Magic", img: "909039007.png" },
+                { id: "909039008", name: "Oh Yeah!", img: "909039008.png" },
+                { id: "909039009", name: "Grace On Wheels", img: "909039009.png" },
+                { id: "909039010", name: "Flex", img: "909039010.png" },
+                { id: "909039011", name: "Crimson Doom", img: "909039011.png" },
+                { id: "909039012", name: "Fire Beast Tamer", img: "909039012.png" },
+                { id: "909039013", name: "Crimson Tunes", img: "909039013.png" },
+                { id: "909039014", name: "Swaggy V-Steps", img: "909039014.png" },
+                { id: "909040001", name: "Chromatic Finish", img: "909040001.png" },
+                { id: "909040002", name: "Smash the Feather", img: "909040002.png" },
+                { id: "909040003", name: "Sonorous Steps", img: "909040003.png" },
+                { id: "909040004", name: "Fishing for Wisdom", img: "909040004.png" },
+                { id: "909040005", name: "Chromatic Pop Dance", img: "909040005.png" },
+                { id: "909040006", name: "Chroma Twist", img: "909040006.png" },
+                { id: "909040008", name: "Birth of Justice", img: "909040008.png" },
+                { id: "909040009", name: "Spider-Sense", img: "909040009.png" },
+                { id: "909040011", name: "Play With Thunderbolt", img: "909040011.png" },
+                { id: "909040012", name: "6th Anniversary", img: "909040012.png" },
+                { id: "909040013", name: "Wisdom Swing", img: "909040013.png" },
+                { id: "909040014", name: "Helicopter Shot", img: "909040014.png" },
+                { id: "909041005", name: "Diz My Popblaster", img: "909041005.png" },
+                { id: "909041006", name: "Dance Puppet Dance!", img: "909041006.png" },
+                { id: "909041007", name: "High Knees", img: "909041007.png" },
+                { id: "909041008", name: "Bony Fumes", img: "909041008.png" },
+                { id: "909041009", name: "Feel the Electricity", img: "909041009.png" },
+                { id: "909041010", name: "Whac-A-Cotton", img: "909041010.png" },
+                { id: "909041011", name: "Honorable Mention", img: "909041011.png" },
+                { id: "909041012", name: "BR Grandmaster", img: "909041012.png" },
+                { id: "909041013", name: "CS Grandmaster", img: "909041013.png" },
+                { id: "909041014", name: "Monster Clubbing", img: "909041014.png" },
+                { id: "909041015", name: "Basudara Dance", img: "909041015.png" },
+                { id: "909042001", name: "Stir-Fry Frostfire", img: "909042001.png" },
+                { id: "909042002", name: "Money Rain", img: "909042002.png" },
+                { id: "909042003", name: "Frostfire's Calling", img: "909042003.png" },
+                { id: "909042004", name: "Stomping Foot", img: "909042004.png" },
+                { id: "909042005", name: "This Way", img: "909042005.png" },
+                { id: "909042006", name: "Excellent Service", img: "909042006.png" },
+                { id: "909042009", name: "Celebration Schuss", img: "909042009.png" },
+                { id: "909042011", name: "Dawn Voyage", img: "909042011.png" },
+                { id: "909042012", name: "Lamborghini Ride", img: "909042012.png" },
+                { id: "909042013", name: "Hello Frostfire", img: "909042013.png" },
+                { id: "909042016", name: "Hand Grooves", img: "909042016.png" },
+                { id: "909042017", name: "Free Fire Toiletman", img: "909042017.png" },
+                { id: "909042018", name: "Kemusan", img: "909042018.png" },
+                { id: "909043001", name: "Ribbit Rider", img: "909043001.png" },
+                { id: "909043002", name: "Inner Self Mastery", img: "909043002.png" },
+                { id: "909043003", name: "Emperor's Treasure", img: "909043003.png" },
+                { id: "909043004", name: "Why So Chaos?", img: "909043004.png" },
+                { id: "909043005", name: "Huge Feast", img: "909043005.png" },
+                { id: "909043006", name: "Color Burst", img: "909043006.png" },
+                { id: "909043007", name: "Dragon Swipe", img: "909043007.png" },
+                { id: "909043008", name: "Samba", img: "909043008.png" },
+                { id: "909043009", name: "Speed Summon", img: "909043009.png" },
+                { id: "909043010", name: "What a Match", img: "909043010.png" },
+                { id: "909043013", name: "What a Pair", img: "909043013.png" },
+                { id: "909044001", name: "Byte Mounting", img: "909044001.png" },
+                { id: "909044002", name: "The Unicyclist", img: "909044002.png" },
+                { id: "909044003", name: "Basket Rafting", img: "909044003.png" },
+                { id: "909044004", name: "Happy Lamb", img: "909044004.png" },
+                { id: "909044005", name: "Paradox Enlightenment", img: "909044005.png" },
+                { id: "909044006", name: "Harmonious Paradox", img: "909044006.png" },
+                { id: "909044007", name: "Raise Your Thumb!", img: "909044007.png" },
+                { id: "909044015", name: "Final Paradox", img: "909044015.png" },
+                { id: "909044016", name: "Honk Up!", img: "909044016.png" },
+                { id: "909045002", name: "Spring Rocker", img: "909045002.png" },
+                { id: "909045003", name: "Giddy Up!", img: "909045003.png" },
+                { id: "909045004", name: "The Goosy Dance", img: "909045004.png" },
+                { id: "909045005", name: "Captain Victor", img: "909045005.png" },
+                { id: "909045010", name: "A Flower Salute", img: "909045010.png" },
+                { id: "909045011", name: "Little Foxy Run", img: "909045011.png" },
+                { id: "909045012", name: "Mr. Waggor's Seesaw", img: "909045012.png" },
+                { id: "909045015", name: "Floating Meditation", img: "909045015.png" },
+                { id: "909045016", name: "Naatu Naatu", img: "909045016.png" },
+                { id: "909045017", name: "Champion's Walk", img: "909045017.png" },
+                { id: "909046001", name: "Aura Boarder", img: "909046001.png" },
+                { id: "909046002", name: "Who's the Champ!", img: "909046002.png" },
+                { id: "909046003", name: "Controlled Combustion", img: "909046003.png" },
+                { id: "909046004", name: "Cheers to Victory!", img: "909046004.png" },
+                { id: "909046005", name: "Shoe Shining", img: "909046005.png" },
+                { id: "909046006", name: "Gunspinning", img: "909046006.png" },
+                { id: "909046007", name: "Crowd Pleaser", img: "909046007.png" },
+                { id: "909046008", name: "No Sweat", img: "909046008.png" },
+                { id: "909046009", name: "Magma Quake", img: "909046009.png" },
+                { id: "909046010", name: "Max Firepower", img: "909046010.png" },
+                { id: "909046011", name: "Can't Touch This", img: "909046011.png" },
+                { id: "909046012", name: "Firestarter", img: "909046012.png" },
+                { id: "909046013", name: "FFWS Flag Flair", img: "909046013.png" },
+                { id: "909046014", name: "Beat Drop", img: "909046014.png" },
+                { id: "909046015", name: "Spatial Awareness", img: "909046015.png" },
+                { id: "909046016", name: "Nagi's Trapping", img: "909046016.png" },
+                { id: "909046017", name: "Soaring Up", img: "909046017.png" },
+                { id: "909047001", name: "I Won't Bow Down", img: "909047001.png" },
+                { id: "909047002", name: "Aurora Iridescence", img: "909047002.png" },
+                { id: "909047003", name: "Couch For Two", img: "909047003.png" },
+                { id: "909047004", name: "Flutter Dash", img: "909047004.png" },
+                { id: "909047005", name: "Slippery Throne", img: "909047005.png" }
+            ];
+
+            // ============================================================
+            // ===== DOM REFS =====
+            // ============================================================
+            const teamCodeInput = document.getElementById('team-code');
+            const uid1 = document.getElementById('uid1');
+            const uid2 = document.getElementById('uid2');
+            const uid3 = document.getElementById('uid3');
+            const uid4 = document.getElementById('uid4');
+            const uid5 = document.getElementById('uid5');
+            const uid6 = document.getElementById('uid6');
+            const serverSelect = document.getElementById('server');
+            const emoteListContainer = document.getElementById('emote-list');
+
+            // ============================================================
+            // ===== SEND HANDLER (Uses New API) =====
+            // ============================================================
+            function attachSendListener(button) {
+                button.addEventListener('click', function() {
+                    const emoteId = this.getAttribute('data-emote-id');
+                    const tc = teamCodeInput.value.trim();
+                    const uid = uid1.value.trim();
+                    const server = serverSelect.value;
+
+                    if (!tc || !uid || !emoteId) {
+                        showToast('⚠️ Please fill in Team Code and UID 1', 'error');
+                        return;
+                    }
+
+                    // Build URL with the new API format
+                    let apiUrl = 'https://ffemote.pro/api/join?';
+                    apiUrl += 'tc=' + encodeURIComponent(tc);
+                    apiUrl += '&emote_id=' + encodeURIComponent(emoteId);
+                    apiUrl += '&server=' + encodeURIComponent(server);
+                    apiUrl += '&uid1=' + encodeURIComponent(uid);
+
+                    const uid2Val = uid2.value.trim();
+                    const uid3Val = uid3.value.trim();
+                    const uid4Val = uid4.value.trim();
+                    const uid5Val = uid5.value.trim();
+                    const uid6Val = uid6.value.trim();
+
+                    if (uid2Val) apiUrl += '&uid2=' + encodeURIComponent(uid2Val);
+                    if (uid3Val) apiUrl += '&uid3=' + encodeURIComponent(uid3Val);
+                    if (uid4Val) apiUrl += '&uid4=' + encodeURIComponent(uid4Val);
+                    if (uid5Val) apiUrl += '&uid5=' + encodeURIComponent(uid5Val);
+                    if (uid6Val) apiUrl += '&uid6=' + encodeURIComponent(uid6Val);
+
+                    showToast('🔄 Sending emote...', 'info');
+
+                    fetch(apiUrl, {
+                        method: 'GET',
+                        headers: { 'Accept': 'application/json' }
+                    })
+                    .then(async function(response) {
+                        let data;
+                        let isJson = false;
+                        const contentType = response.headers.get('content-type');
+                        if (contentType && contentType.includes('application/json')) {
+                            try {
+                                data = await response.json();
+                                isJson = true;
+                            } catch (e) {
+                                data = await response.text();
+                            }
+                        } else {
+                            data = await response.text();
+                        }
+
+                        if (!response.ok) {
+                            let errorMsg = '❌ Error ' + response.status;
+                            if (response.status === 404) {
+                                errorMsg += ' - API endpoint not found.';
+                            } else {
+                                errorMsg += '\n' + (isJson ? JSON.stringify(data, null, 2) : data);
+                            }
+                            showToast(errorMsg, 'error');
+                            return;
+                        }
+
+                        if (isJson) {
+                            if (data.status === 'success') {
+                                showToast('✅ ' + (data.message || 'Emote sent successfully!'), 'success');
+                            } else {
+                                showToast('⚠️ ' + (data.message || 'Something went wrong'), 'error');
+                            }
+                        } else {
+                            showToast('✅ Emote sent!', 'success');
+                        }
+                    })
+                    .catch(function(err) {
+                        showToast('❌ Network error: ' + err.message, 'error');
+                    });
+                });
+            }
+
+            // ============================================================
+            // ===== RENDER EMOTES =====
+            // ============================================================
+            function renderEmotes() {
+                emoteListContainer.innerHTML = '';
+                emotes.forEach(function(emote) {
+                    const item = document.createElement('div');
+                    item.className = 'emote-item';
+
+                    const img = document.createElement('img');
+                    const imageUrl = 'https://cdn.jsdelivr.net/gh/ShahGCreator/icon@main/PNG/' + emote.img;
+                    img.src = imageUrl;
+                    img.alt = emote.name;
+                    img.loading = 'lazy';
+                    img.decoding = 'async';
+                    img.onerror = function() {
+                        this.style.display = 'none';
+                        const placeholder = document.createElement('div');
+                        placeholder.style.cssText = 'width:52px;height:52px;background:var(--bg-input);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;border:1px solid var(--border-color);';
+                        placeholder.textContent = '🎮';
+                        this.parentNode.insertBefore(placeholder, this);
+                    };
+
+                    const details = document.createElement('div');
+                    details.className = 'emote-details';
+                    const nameP = document.createElement('p');
+                    nameP.className = 'emote-name';
+                    nameP.textContent = emote.name || 'Unknown Emote';
+                    details.appendChild(nameP);
+
+                    const button = document.createElement('button');
+                    button.className = 'send-button';
+                    button.setAttribute('data-emote-id', emote.id);
+                    button.textContent = 'Send';
+
+                    item.appendChild(img);
+                    item.appendChild(details);
+                    item.appendChild(button);
+                    emoteListContainer.appendChild(item);
+                    attachSendListener(button);
+                });
+            }
+
+            renderEmotes();
+            console.log('🔒 KT GAMERZ — Using API: https://ffemote.pro/api/join | 7 Servers');
+        })();
+    </script>
+
+</body>
+</html>
