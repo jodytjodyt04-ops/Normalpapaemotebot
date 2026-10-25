@@ -228,7 +228,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;fl
   document.addEventListener('dragstart', function (e) { e.preventDefault(); }, true);
 
   // ===== Password gate =====
-  var PASSWORD = 'normalff';
+  var PASSWORDS = ['nff01'];
   var lock = document.getElementById('lock');
   var app = document.getElementById('app');
   var pw = document.getElementById('pw');
@@ -236,7 +236,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;fl
   function openApp() { lock.hidden = true; app.hidden = false; }
   try { if (sessionStorage.getItem('normalpapa_unlocked') === '1') openApp(); } catch (e) {}
   function tryUnlock() {
-    if (pw.value.trim().toLowerCase() === PASSWORD) {
+    if (PASSWORDS.indexOf(pw.value.trim().toLowerCase()) !== -1) {
       try { sessionStorage.setItem('normalpapa_unlocked', '1'); } catch (e) {}
       openApp();
     } else {
