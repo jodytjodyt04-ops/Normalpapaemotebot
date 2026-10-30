@@ -2,78 +2,686 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Under maintenance</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NORMAL FF X DALAL Emote Bot</title>
 <style>
-  :root {
-    --bg: #14213d;
-    --ink: #f5f1e8;
-    --muted: #b9c0d0;
-    --accent: #fca311;
-    --accent-ink: #14213d;
-  }
-  * { box-sizing: border-box; }
-  html, body { height: 100%; margin: 0; }
-  body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    background: var(--bg);
-    color: var(--ink);
-    font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
-    text-align: center;
-  }
-  main { max-width: 34rem; }
-  .gear {
-    width: 88px; height: 88px;
-    margin: 0 auto 28px;
-    color: var(--accent);
-    animation: spin 14s linear infinite;
-  }
-  h1 {
-    margin: 0 0 14px;
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: clamp(2rem, 7vw, 3.2rem);
-    line-height: 1.1;
-    font-weight: 700;
-  }
-  p { margin: 0 0 32px; color: var(--muted); font-size: 1.1rem; line-height: 1.6; }
-  a.btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 26px;
-    border-radius: 999px;
-    background: var(--accent);
-    color: var(--accent-ink);
-    font-weight: 700;
-    text-decoration: none;
-    transition: transform .15s ease;
-  }
-  a.btn:hover { transform: translateY(-2px); }
-  a.btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
-  a.btn svg { width: 20px; height: 20px; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @media (prefers-reduced-motion: reduce) { .gear { animation: none; } }
+:root{--bg:#07070b;--surface:#101017;--card:#16161f;--input:#1c1c27;--ink:#f4f1ea;--ink2:#c9c6bf;--muted:#8a8895;--line:#262633;--gold:#f5b942;--gold2:#ff8a3d;--onGold:#1a1206;--glow:rgba(245,185,66,.18);--info:#6674e8;--ok:#10b981;--err:#ef4444}
+[data-theme="light"]{--bg:#f3f1ec;--surface:#fff;--card:#faf8f4;--input:#f0ede7;--ink:#17161c;--ink2:#3b3a45;--muted:#77757f;--line:#e2ded5;--gold:#d98a0b;--gold2:#e8590c;--onGold:#fff;--glow:rgba(217,138,11,.16);--ok:#059669;--err:#dc2626}
+*{margin:0;padding:0;box-sizing:border-box}
+*{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+input,select{user-select:text;-webkit-user-select:text}
+html{background:var(--bg)}
+body{font-family:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;background:radial-gradient(900px 420px at 50% -120px,var(--glow),transparent),var(--bg);color:var(--ink);min-height:100vh;padding:18px 14px 48px}
+.i{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;vertical-align:middle}
+.wrap{max-width:860px;margin:0 auto}
+[hidden]{display:none!important}
+
+/* header */
+header{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:12px}
+.mark{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;color:var(--onGold);background:linear-gradient(135deg,var(--gold),var(--gold2));box-shadow:0 8px 24px var(--glow);font-size:22px}
+.brand h1{font-size:20px;font-weight:800;letter-spacing:.5px;line-height:1.1}
+.brand span{font-size:12.5px;color:var(--muted)}
+.tools{display:flex;align-items:center;gap:10px}
+.theme{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:16px}
+.switch{position:relative;width:48px;height:26px;display:inline-block}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:var(--input);border:1px solid var(--line);border-radius:26px;cursor:pointer}
+.slider::before{content:"";position:absolute;width:18px;height:18px;left:3px;top:3px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));transition:transform .25s}
+.switch input:checked+.slider::before{transform:translateX(22px)}
+.switch input:focus-visible+.slider{outline:2px solid var(--gold);outline-offset:2px}
+
+/* instagram logo tile */
+.ig{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:#fff;font-size:18px;flex-shrink:0;background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285AEB 90%)}
+.ig .i{stroke-width:2}
+.ig-pill{display:inline-flex;align-items:center;gap:10px;padding:6px 16px 6px 6px;border-radius:40px;background:var(--surface);border:1px solid var(--line);color:var(--ink);font-weight:700;font-size:13.5px;text-decoration:none;transition:transform .2s,border-color .2s}
+.ig-pill:hover{transform:translateY(-2px);border-color:var(--gold)}
+
+/* panels */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:20px;margin-bottom:18px;box-shadow:0 18px 50px rgba(0,0,0,.18)}
+.panel-title{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;margin-bottom:16px}
+.panel-title .badge{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:var(--gold);background:var(--glow);font-size:16px}
+.panel-title small{margin-left:auto;font-weight:600;color:var(--muted);font-size:12.5px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.uids{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.field label{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--ink2);margin-bottom:6px}
+.field label .i{color:var(--muted)}
+.field input,.field select{width:100%;padding:12px 14px;border-radius:13px;border:1px solid var(--line);background:var(--input);color:var(--ink);font-size:15px;outline:none;transition:border-color .2s,box-shadow .2s}
+.field input:focus,.field select:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--glow)}
+.field select option{background:var(--surface);color:var(--ink)}
+
+/* emotes */
+.emote-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.emote-item{display:flex;flex-direction:column;align-items:center;gap:12px;padding:16px 12px 14px;background:var(--card);border:1px solid var(--line);border-radius:18px;transition:transform .2s,border-color .2s,box-shadow .2s}
+.emote-item:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 14px 30px var(--glow)}
+.emote-item img,.emote-ph{width:88px;height:88px;border-radius:14px;object-fit:contain;background:var(--input);border:1px solid var(--line)}
+.emote-ph{display:grid;place-items:center;color:var(--gold);font-size:28px}
+.emote-name{font-size:14px;font-weight:700;text-align:center}
+.send{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 12px;border:0;border-radius:30px;font-weight:800;font-size:14px;cursor:pointer;color:var(--onGold);background:linear-gradient(135deg,var(--gold),var(--gold2));transition:transform .15s,filter .15s}
+.send:hover{filter:brightness(1.08)}
+.send:active{transform:scale(.96)}
+.send:disabled{opacity:.55;cursor:wait}
+.send:focus-visible,.btn:focus-visible,.ig-pill:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* toast */
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);padding:13px 24px;border-radius:14px;font-size:14px;font-weight:600;z-index:99999;max-width:90%;text-align:center;color:#fff;box-shadow:0 10px 40px rgba(0,0,0,.4);animation:up .35s ease}
+.toast-info{background:var(--info)}.toast-success{background:var(--ok)}.toast-error{background:var(--err)}
+@keyframes up{from{opacity:0;transform:translateX(-50%) translateY(24px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+/* lock dialog */
+.lock{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(700px 380px at 50% 25%,var(--glow),transparent),var(--bg)}
+.lock-box{width:100%;max-width:390px;background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:32px 24px 24px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.lock-ico{width:68px;height:68px;margin:0 auto 18px;border-radius:50%;display:grid;place-items:center;font-size:30px;color:var(--gold);background:var(--glow);border:1px solid var(--gold);box-shadow:0 0 0 8px var(--glow)}
+.lock-box h2{font-size:22px;font-weight:800;margin-bottom:6px}
+.lock-box p.sub{font-size:14px;color:var(--muted);margin-bottom:20px}
+.pw{position:relative;margin-bottom:6px}
+.pw .i{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.pw input{width:100%;padding:14px 14px 14px 44px;border-radius:14px;border:1px solid var(--line);background:var(--input);color:var(--ink);font-size:16px;outline:none}
+.pw input:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--glow)}
+.pw input.bad{border-color:var(--err)}
+.lock-err{min-height:22px;font-size:13px;color:var(--err);text-align:left;padding:4px 4px 8px}
+.btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:13px;border-radius:30px;font-weight:800;font-size:15px;cursor:pointer;text-decoration:none;border:0}
+.btn.gold{color:var(--onGold);background:linear-gradient(135deg,var(--gold),var(--gold2));box-shadow:0 10px 26px var(--glow)}
+.btn.gold:hover{filter:brightness(1.08)}
+.or{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:12.5px;margin:18px 0}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+.btn.insta{background:var(--card);color:var(--ink);border:1px solid var(--line);padding:9px 16px 9px 9px;justify-content:flex-start}
+.btn.insta:hover{border-color:var(--gold)}
+.btn.insta .t{flex:1;text-align:center;font-size:14px}
+.btn.insta .ig{width:34px;height:34px;font-size:20px}
+
+@media(max-width:640px){.grid2{grid-template-columns:1fr}.uids{grid-template-columns:1fr 1fr}.panel{padding:16px}header{justify-content:center}.brand{width:100%;justify-content:center}.tools{width:100%;justify-content:center}}
+@media(max-width:380px){.uids{grid-template-columns:1fr}.emote-list{grid-template-columns:1fr 1fr;gap:10px}.emote-item img,.emote-ph{width:72px;height:72px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+.search-wrap{position:relative;margin-bottom:16px}
+.search-wrap .i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.search-wrap input{width:100%;padding:12px 14px 12px 42px;border-radius:13px;border:1px solid var(--line);background:var(--input);color:var(--ink);font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s;user-select:text;-webkit-user-select:text}
+.search-wrap input:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--glow)}
+.load-more{width:100%;margin-top:16px;padding:14px;border-radius:30px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:800;font-size:14px;cursor:pointer;transition:.2s}
+.load-more:hover{border-color:var(--gold);background:var(--input)}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:20px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media(max-width:640px){.grid3{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<main>
-  <svg class="gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <circle cx="12" cy="12" r="3"/>
-    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-  </svg>
-  <h1>We’re under maintenance</h1>
-  <p>Our website is getting some work done. Follow us on Instagram for updates on when we’re back.</p>
-  <a class="btn" href="https://www.instagram.com/normal_ff01?exln=MThuZ3BhOXE5ZjZtOQ==" target="_blank" rel="noopener noreferrer">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <rect x="3" y="3" width="18" height="18" rx="5"/>
-      <circle cx="12" cy="12" r="4"/>
-      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
-    </svg>
-    Follow on Instagram
-  </a>
-</main>
+
+<!-- icon set (inline, no external files) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10.5" rx="3"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/><circle cx="12" cy="15.7" r="1.2" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="6.5" rx="2.5"/><rect x="3" y="13.5" width="18" height="6.5" rx="2.5"/><circle cx="7" cy="7.25" r=".9" fill="currentColor" stroke="none"/><circle cx="7" cy="16.75" r=".9" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.2c2.6.2 4.5 2 4.5 5"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M21.5 2.5 10.5 13.5"/><path d="M21.5 2.5l-7 19-4-8.5-8.5-4z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2.5l2.6 6.9 6.9 2.6-6.9 2.6L12 21.5l-2.6-6.9L2.5 12l6.9-2.6z"/></symbol>
+  <symbol id="i-insta" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2.5 4.5 13.5H11L10 21.5l8.5-11H12z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></symbol>
+</svg>
+
+<!-- password dialog -->
+<div class="lock" id="lock" role="dialog" aria-modal="true" aria-labelledby="lock-title">
+  <div class="lock-box">
+    <div class="lock-ico"><svg class="i"><use href="#i-lock"/></svg></div>
+    <h2 id="lock-title">Enter password</h2>
+    <p class="sub">This site is password protected.</p>
+    <div class="pw">
+      <svg class="i"><use href="#i-lock"/></svg>
+      <input type="password" id="pw" placeholder="Password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Password">
+    </div>
+    <div class="lock-err" id="lock-err" aria-live="polite"></div>
+    <button class="btn gold" id="unlock">Unlock <svg class="i"><use href="#i-arrow"/></svg></button>
+    <div class="or">Don't know the password?</div>
+    <a class="btn insta" href="https://www.instagram.com/normal_ff01?exln=MThuZ3BhOXE5ZjZtOQ==" target="_blank" rel="noopener noreferrer">
+      <span class="ig"><svg class="i"><use href="#i-insta"/></svg></span>
+      <span class="t">Click here to get password</span>
+    </a>
+  </div>
+</div>
+
+<!-- app -->
+<div class="wrap" id="app" hidden>
+  <header>
+    <div class="brand">
+      <div class="mark"><svg class="i"><use href="#i-spark"/></svg></div>
+      <div><h1>NORMAL FF X DALAL</h1><span>Emote Bot</span></div>
+    </div>
+    <div class="tools">
+      <a class="ig-pill" href="https://www.instagram.com/normal_ff01?exln=MThuZ3BhOXE5ZjZtOQ==" target="_blank" rel="noopener noreferrer"><span class="ig"><svg class="i"><use href="#i-insta"/></svg></span>Follow Instagram</a>
+      <div class="theme">
+        <svg class="i"><use href="#i-sun"/></svg>
+        <label class="switch"><input type="checkbox" id="theme-toggle" aria-label="Toggle light theme"><span class="slider"></span></label>
+        <svg class="i"><use href="#i-moon"/></svg>
+      </div>
+    </div>
+  </header>
+
+  <section class="panel">
+    <div class="panel-title"><span class="badge"><svg class="i"><use href="#i-users"/></svg></span>Match details</div>
+    <div class="grid3">
+      <div class="field">
+        <label for="api"><svg class="i"><use href="#i-bolt"/></svg> API</label>
+        <select id="api">
+          <option value="1">API 1 (Pro)</option>
+          <option value="2">API 2 (Backup)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="server"><svg class="i"><use href="#i-server"/></svg> Server</label>
+        <select id="server">
+          <option value="india">India Server</option>
+          <option value="pakistan">Pakistan Server</option>
+          <option value="bangladesh">Bangladesh Server</option>
+          <option value="indonesia">Indonesia Server</option>
+          <option value="brazil" data-api2="1">Brazil Server (API 2 only)</option>
+          <option value="taiwan" data-api2="1">Taiwan Server (API 2 only)</option>
+          <option value="vietnam" data-api2="1">Vietnam Server (API 2 only)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="team-code"><svg class="i"><use href="#i-users"/></svg> Team Code</label>
+        <input type="text" id="team-code" placeholder="Enter team code" inputmode="numeric">
+      </div>
+    </div>
+    <div class="uids">
+      <div class="field"><label for="uid1"><svg class="i"><use href="#i-user"/></svg> UID 1</label><input type="text" id="uid1" placeholder="Required" inputmode="numeric"></div>
+      <div class="field"><label for="uid2"><svg class="i"><use href="#i-user"/></svg> UID 2</label><input type="text" id="uid2" placeholder="Optional" inputmode="numeric"></div>
+      <div class="field"><label for="uid3"><svg class="i"><use href="#i-user"/></svg> UID 3</label><input type="text" id="uid3" placeholder="Optional" inputmode="numeric"></div>
+      <div class="field"><label for="uid4"><svg class="i"><use href="#i-user"/></svg> UID 4</label><input type="text" id="uid4" placeholder="Optional" inputmode="numeric"></div>
+      <div class="field"><label for="uid5"><svg class="i"><use href="#i-user"/></svg> UID 5</label><input type="text" id="uid5" placeholder="Optional" inputmode="numeric"></div>
+      <div class="field"><label for="uid6"><svg class="i"><use href="#i-user"/></svg> UID 6</label><input type="text" id="uid6" placeholder="Optional" inputmode="numeric"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-title"><span class="badge"><svg class="i"><use href="#i-spark"/></svg></span>OB55 Emotes<small>13 new</small></div>
+    <div class="emote-list" id="emote-list-ob55"></div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-title"><span class="badge"><svg class="i"><use href="#i-spark"/></svg></span>All Emotes<small id="all-count"></small></div>
+    <div class="search-wrap">
+      <svg class="i"><use href="#i-search"/></svg>
+      <input type="text" id="emote-search" placeholder="Search emotes by name or ID..." autocomplete="off">
+    </div>
+    <div class="emote-list" id="emote-list-all"></div>
+    <button class="load-more" id="load-more" hidden>Load More Emotes</button>
+  </section>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ===== Anti-inspection =====
+  document.addEventListener('keydown', function (e) {
+    var k = (e.key || '').toLowerCase();
+    if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (k === 'i' || k === 'j' || k === 'c')) || (e.ctrlKey && (k === 'u' || k === 's' || k === 'p'))) {
+      e.preventDefault(); e.stopPropagation(); return false;
+    }
+  }, true);
+  document.addEventListener('contextmenu', function (e) { e.preventDefault(); }, true);
+  document.addEventListener('dragstart', function (e) { e.preventDefault(); }, true);
+
+  // ===== Password gate =====
+  var PASSWORDS = ['nff01'];
+  var lock = document.getElementById('lock');
+  var app = document.getElementById('app');
+  var pw = document.getElementById('pw');
+  var lockErr = document.getElementById('lock-err');
+  function openApp() { lock.hidden = true; app.hidden = false; }
+  try { if (sessionStorage.getItem('normalpapa_unlocked') === '1') openApp(); } catch (e) {}
+  function tryUnlock() {
+    if (PASSWORDS.indexOf(pw.value.trim().toLowerCase()) !== -1) {
+      try { sessionStorage.setItem('normalpapa_unlocked', '1'); } catch (e) {}
+      openApp();
+    } else {
+      pw.classList.add('bad');
+      lockErr.textContent = 'Wrong password. Try again.';
+      pw.select();
+    }
+  }
+  document.getElementById('unlock').addEventListener('click', tryUnlock);
+  pw.addEventListener('keydown', function (e) { if (e.key === 'Enter') tryUnlock(); });
+  pw.addEventListener('input', function () { pw.classList.remove('bad'); lockErr.textContent = ''; });
+
+  // ===== API =====
+  var API_BASE = 'https://proapi.ffglory.site/emote';
+  var API_KEY = 'ShadowTCPProGamer';
+
+  // ===== Toast =====
+  function showToast(msg, type) {
+    var old = document.querySelector('.toast'); if (old) old.remove();
+    var t = document.createElement('div');
+    t.className = 'toast toast-' + (type || 'info');
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function () { t.style.opacity = '0'; setTimeout(function () { t.remove(); }, 400); }, 4000);
+  }
+
+  // ===== Theme =====
+  var toggle = document.getElementById('theme-toggle');
+  var saved = 'dark';
+  try { saved = localStorage.getItem('normalpapa_theme') || 'dark'; } catch (e) {}
+  document.documentElement.setAttribute('data-theme', saved);
+  toggle.checked = saved === 'light';
+  toggle.addEventListener('change', function () {
+    var th = this.checked ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', th);
+    try { localStorage.setItem('normalpapa_theme', th); } catch (e) {}
+  });
+
+  // ===== Emotes =====
+  var IMG = 'https://cdn.jsdelivr.net/gh/ShahGCreator/icon@main/PNG/';
+  var ob55 = [];
+  for (var n = 1; n <= 13; n++) {
+    ob55.push({ id: '9090550' + (n < 10 ? '0' : '') + n, name: 'OB55 Emote ' + n });
+  }
+  var allEmotes = `909000075|Cobra Max
+909000063|Ak Max
+909035007|Shotgun Max
+909000068|Scar Max
+909000085|XM8 Max
+909000081|M10 Max
+909000090|Famasa Max
+909000098|UMP Max
+909040010|New M40 Max
+909045001|Parafal Max
+909042008|WD Picker Max
+909049012|Open Fire
+909042007|Gloo Sculpture
+909000002|LOL
+909000003|Provoke
+909000010|Flowers of Love
+909000014|FFWC Throne
+909000032|Selfie
+909000034|Pirate's Flag
+909000036|Top DJ
+909000038|Power of Money
+909000039|Eat My Dust
+909000041|Kongfu
+909000045|I Heart You
+909000046|Tea Time
+909000052|Doggie
+909000055|I'm Rich!
+909000056|Make It Rain
+909000057|Dust Off
+909000058|Captain Booyah
+909000060|BOOYAH!
+909000061|Bhangra
+909000062|Piece of Cake
+909000064|I'm Saitama!
+909000065|The Victor
+909000066|Sii!
+909000067|Obliteration
+909000069|Top Scorer
+909000070|Triple Kicks
+909000071|Cobra Dance
+909000072|Predator Pulse
+909000073|Ground Punch
+909000074|The Biker
+909000076|One-Finger Pushup
+909000077|Stage Time
+909000078|Booyah! Balloon
+909000079|More Practice
+909000080|FFWS 2021
+909000086|Mythos Four
+909000087|Champion Grab
+909000088|Win and Chill
+909000089|Hadouken
+909000091|Big Smash
+909000093|All In Control
+909000094|Debugging
+909000095|Waggor Wave
+909000096|Crazy Guitar
+909000121|Dribble King
+909000123|Mind it!
+909000124|Golden Combo
+909000125|Sick Moves
+909000128|Ruler's Flag
+909000129|Money Throw
+909000130|Endless Bullets
+909000133|Fire Slam
+909000134|Heartbroken
+909000135|Rock Paper Scissors
+909000136|Shattered Reality
+909000137|Halo of Music
+909000138|Burnt BBQ
+909000139|Switching Steps
+909000140|Creed Slay
+909000141|Leap of Fail
+909000143|Helicopter Shot
+909000144|Kungfu Tigers
+909000145|Possessed Warrior
+909033001|Fireborn
+909033002|Golden Feather
+909033004|Drop Kick
+909033005|Sit Down!
+909033006|BOOYAH Sparks
+909033007|The FFWS Dance
+909033008|Easy Peasy
+909033009|Winner Throw
+909033010|Weight of Victory
+909034001|Chronicle of Sword
+909034002|The Collapse
+909034003|Flaming Groove
+909034004|Energetic
+909034005|Ridicule
+909034006|Tease Waggor
+909034007|Great Conductor
+909034008|Fake Death
+909034009|Twerk
+909034010|BR Heroic Emote
+909034011|BR Master Emote
+909034012|CS Heroic Emote
+909034013|CS Master Emote
+909034014|Yes, I do
+909035001|Free Money!
+909035005|Victorious Eagle
+909035006|Flying Saucer
+909035008|Bobble Dance
+909035009|Weight Training
+909035010|Beautiful Love
+909035011|Groove Moves
+909035012|Howler's Rage
+909035013|Louder Please
+909035014|Ninja Stand
+909035015|Creator In Action
+909036001|Ghost Float
+909036002|Shiba Surf
+909036003|Waiter Walk
+909036004|Graffiti Cameraman
+909036005|Agile Boxer
+909036006|Sunbathing
+909036008|Skateboard Swag
+909036009|Phantom Tamer
+909036010|The Signal
+909036011|Eternal Descent
+909036012|Swaggy Dance
+909036014|Admire
+909037001|Reindeer Float
+909037002|Bamboo Dance
+909037003|Dance of Constellation
+909037004|Trophy Grab
+909037005|Starry Hands
+909037006|Yum
+909037007|Happy Dancing
+909037008|Juggle
+909037009|Neon Sign
+909037010|Beast Tease
+909037011|Drachen Tear
+909037012|Clap Dance
+909038001|The Influencer
+909038003|Techno Blast
+909038004|Be My Valentine
+909038005|Angry Walk
+909038006|Make Some Noise
+909038008|Croco Hooray
+909038009|Scorpio Spin
+909038010|Cinder Summon
+909038011|Shall We Dance?
+909038012|Achiever Flip
+909038013|Spin Master
+909039001|Festival Celebration
+909039002|Artistic Dance
+909039003|Forward Backward
+909039004|Scorpion Friend
+909039005|Aching Power
+909039006|Earthly Force
+909039007|Grenade Magic
+909039008|Oh Yeah!
+909039009|Grace On Wheels
+909039010|Flex
+909039011|Crimson Doom
+909039012|Fire Beast Tamer
+909039013|Crimson Tunes
+909039014|Swaggy V-Steps
+909040001|Chromatic Finish
+909040002|Smash the Feather
+909040003|Sonorous Steps
+909040004|Fishing for Wisdom
+909040005|Chromatic Pop Dance
+909040006|Chroma Twist
+909040008|Birth of Justice
+909040009|Spider-Sense
+909040011|Play With Thunderbolt
+909040012|6th Anniversary
+909040013|Wisdom Swing
+909040014|Helicopter Shot
+909041005|Diz My Popblaster
+909041006|Dance Puppet Dance!
+909041007|High Knees
+909041008|Bony Fumes
+909041009|Feel the Electricity
+909041010|Whac-A-Cotton
+909041011|Honorable Mention
+909041012|BR Grandmaster
+909041013|CS Grandmaster
+909041014|Monster Clubbing
+909041015|Basudara Dance
+909042001|Stir-Fry Frostfire
+909042002|Money Rain
+909042003|Frostfire's Calling
+909042004|Stomping Foot
+909042005|This Way
+909042006|Excellent Service
+909042009|Celebration Schuss
+909042011|Dawn Voyage
+909042012|Lamborghini Ride
+909042013|Hello Frostfire
+909042016|Hand Grooves
+909042017|Free Fire Toiletman
+909042018|Kemusan
+909043001|Ribbit Rider
+909043002|Inner Self Mastery
+909043003|Emperor's Treasure
+909043004|Why So Chaos?
+909043005|Huge Feast
+909043006|Color Burst
+909043007|Dragon Swipe
+909043008|Samba
+909043009|Speed Summon
+909043010|What a Match
+909043013|What a Pair
+909044001|Byte Mounting
+909044002|The Unicyclist
+909044003|Basket Rafting
+909044004|Happy Lamb
+909044005|Paradox Enlightenment
+909044006|Harmonious Paradox
+909044007|Raise Your Thumb!
+909044015|Final Paradox
+909044016|Honk Up!
+909045002|Spring Rocker
+909045003|Giddy Up!
+909045004|The Goosy Dance
+909045005|Captain Victor
+909045010|A Flower Salute
+909045011|Little Foxy Run
+909045012|Mr. Waggor's Seesaw
+909045015|Floating Meditation
+909045016|Naatu Naatu
+909045017|Champion's Walk
+909046001|Aura Boarder
+909046002|Who's the Champ!
+909046003|Controlled Combustion
+909046004|Cheers to Victory!
+909046005|Shoe Shining
+909046006|Gunspinning
+909046007|Crowd Pleaser
+909046008|No Sweat
+909046009|Magma Quake
+909046010|Max Firepower
+909046011|Can't Touch This
+909046012|Firestarter
+909046013|FFWS Flag Flair
+909046014|Beat Drop
+909046015|Spatial Awareness
+909046016|Nagi's Trapping
+909046017|Soaring Up
+909047001|I Won't Bow Down
+909047002|Aurora Iridescence
+909047003|Couch For Two
+909047004|Flutter Dash
+909047005|Slippery Throne`.split('\n').map(function (line) {
+    var k = line.indexOf('|');
+    return { id: line.slice(0, k), name: line.slice(k + 1) };
+  });
+
+  var teamCode = document.getElementById('team-code');
+  var serverSel = document.getElementById('server');
+  var uids = [1, 2, 3, 4, 5, 6].map(function (n) { return document.getElementById('uid' + n); });
+  var listOb55 = document.getElementById('emote-list-ob55');
+  var listAll = document.getElementById('emote-list-all');
+  var searchInput = document.getElementById('emote-search');
+  var loadMoreBtn = document.getElementById('load-more');
+  var allCount = document.getElementById('all-count');
+  var SEND_ICON = '<svg class="i"><use href="#i-send"/></svg> Send';
+
+  // ===== Two APIs =====
+  var API2_BASE = 'https://ffemote.pro/api/join';
+  var REGION1 = { india: 'ind', pakistan: 'pk', bangladesh: 'bd', indonesia: 'id' };
+  var apiSel = document.getElementById('api');
+
+  try { apiSel.value = localStorage.getItem('normalpapa_api') || '1'; } catch (e) {}
+  function syncServers() {
+    var is1 = apiSel.value === '1';
+    Array.prototype.forEach.call(serverSel.options, function (o) {
+      if (o.getAttribute('data-api2')) o.disabled = is1;
+    });
+    if (serverSel.options[serverSel.selectedIndex].disabled) serverSel.value = 'india';
+  }
+  apiSel.addEventListener('change', function () {
+    try { localStorage.setItem('normalpapa_api', apiSel.value); } catch (e) {}
+    syncServers();
+  });
+  syncServers();
+
+  function buildUrl(emoteId) {
+    var extra = '';
+    for (var i = 2; i <= 6; i++) {
+      var v = uids[i - 1].value.trim();
+      if (v) extra += '&uid' + i + '=' + encodeURIComponent(v);
+    }
+    var tc = encodeURIComponent(teamCode.value.trim());
+    var u1 = encodeURIComponent(uids[0].value.trim());
+    var em = encodeURIComponent(emoteId);
+
+    if (apiSel.value === '2') {
+      // API 2: ffemote.pro (long server names)
+      return API2_BASE + '?tc=' + tc + '&emote_id=' + em +
+        '&server=' + encodeURIComponent(serverSel.value) + '&uid1=' + u1 + extra;
+    }
+    // API 1: proapi.ffglory.site (short region codes)
+    return API_BASE + '?key=' + encodeURIComponent(API_KEY) +
+      '&region=' + encodeURIComponent(REGION1[serverSel.value] || 'ind') +
+      '&tc=' + tc + '&uid1=' + u1 + extra + '&emote_id=' + em;
+  }
+
+  function send(btn, emoteId) {
+    if (!teamCode.value.trim() || !uids[0].value.trim()) {
+      showToast('Please fill in Team Code and UID 1', 'error');
+      return;
+    }
+    var url = buildUrl(emoteId);
+    var apiName = 'API ' + apiSel.value;
+    btn.disabled = true;
+    showToast('Sending emote...', 'info');
+
+    // Step 1: normal request that does not need to read the reply (works even when CORS blocks reading).
+    // Step 2: if the browser refuses that request outright (some in-app viewers only allow images),
+    // send the same link as an image request instead. Only one of the two ever reaches the server.
+    function viaImage() {
+      return new Promise(function (resolve) {
+        var beacon = new Image();
+        beacon.referrerPolicy = 'no-referrer';
+        beacon.onload = beacon.onerror = function () { resolve(); };
+        beacon.src = url + '&_=' + Date.now();
+        setTimeout(resolve, 6000);
+      });
+    }
+
+    fetch(url, { method: 'GET', mode: 'no-cors', cache: 'no-store' })
+      .then(function () {
+        showToast('Emote sent via ' + apiName + '! Check in game.', 'success');
+      })
+      .catch(function () {
+        return viaImage().then(function () {
+          showToast('Emote request sent via ' + apiName + ' (backup route). Check in game.', 'success');
+        });
+      })
+      .then(function () { setTimeout(function () { btn.disabled = false; }, 800); });
+  }
+
+  function makeCard(em) {
+    var item = document.createElement('div');
+    item.className = 'emote-item';
+
+    var img = document.createElement('img');
+    var sources = [
+      IMG + em.id + '.png',
+      'https://fastly.jsdelivr.net/gh/ShahGCreator/icon@main/PNG/' + em.id + '.png',
+      'https://gcore.jsdelivr.net/gh/ShahGCreator/icon@main/PNG/' + em.id + '.png',
+      'https://raw.githubusercontent.com/ShahGCreator/icon/main/PNG/' + em.id + '.png'
+    ];
+    var tries = 0;
+    img.referrerPolicy = 'no-referrer';
+    img.alt = em.name;
+    img.onerror = function () {
+      tries++;
+      if (tries < sources.length) { this.src = sources[tries]; return; }
+      var ph = document.createElement('div');
+      ph.className = 'emote-ph';
+      ph.innerHTML = '<svg class="i"><use href="#i-spark"/></svg>';
+      if (this.parentNode) this.parentNode.replaceChild(ph, this);
+    };
+    img.src = sources[0];
+
+    var name = document.createElement('p');
+    name.className = 'emote-name';
+    name.textContent = em.name;
+
+    var btn = document.createElement('button');
+    btn.className = 'send';
+    btn.innerHTML = SEND_ICON;
+    btn.addEventListener('click', function () { send(btn, em.id); });
+
+    item.appendChild(img);
+    item.appendChild(name);
+    item.appendChild(btn);
+    return item;
+  }
+
+  ob55.forEach(function (em) { listOb55.appendChild(makeCard(em)); });
+
+  var PAGE = 30, shown = 0, filtered = allEmotes.slice();
+  function renderAll(reset) {
+    if (reset) { listAll.innerHTML = ''; shown = 0; }
+    filtered.slice(shown, shown + PAGE).forEach(function (em) { listAll.appendChild(makeCard(em)); });
+    shown = Math.min(shown + PAGE, filtered.length);
+    loadMoreBtn.hidden = shown >= filtered.length;
+    allCount.textContent = filtered.length + ' emotes';
+    if (!filtered.length) {
+      var e = document.createElement('div');
+      e.className = 'empty';
+      e.textContent = 'No emotes found';
+      listAll.appendChild(e);
+    }
+  }
+  searchInput.addEventListener('input', function () {
+    var q = this.value.trim().toLowerCase();
+    filtered = !q ? allEmotes.slice() : allEmotes.filter(function (em) {
+      return em.name.toLowerCase().indexOf(q) !== -1 || em.id.indexOf(q) !== -1;
+    });
+    renderAll(true);
+  });
+  loadMoreBtn.addEventListener('click', function () { renderAll(false); });
+  renderAll(true);
+})();
+</script>
 </body>
 </html>
